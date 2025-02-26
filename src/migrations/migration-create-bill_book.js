@@ -9,10 +9,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      bill_id: {
+      billId: {
         type: Sequelize.INTEGER
       },
-      book_id: {
+      bookId: {
         type: Sequelize.INTEGER
       },
       quantity: {

@@ -16,14 +16,14 @@ module.exports = (sequelize, DataTypes) => {
   Book.init({
     name: DataTypes.STRING,
     description: DataTypes.TEXT,
-    original_cost: DataTypes.INTEGER,
+    originalCost: DataTypes.INTEGER,
     sale: DataTypes.INTEGER, //%
     stock: DataTypes.INTEGER,
-    publisher_id: DataTypes.INTEGER,
-    author_id: DataTypes.INTEGER,
+    publisherId: DataTypes.INTEGER,
+    authorId: DataTypes.INTEGER,
     state:  DataTypes.STRING, //show/notshow
-    published_date: DataTypes.DATE,
-    series_id: DataTypes.STRING,
+    publishedDate: DataTypes.DATE,
+    seriesId: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Book',

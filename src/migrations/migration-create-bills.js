@@ -9,25 +9,25 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
+      userId: {
         type: Sequelize.INTEGER
       },
-      payment_method_id: {
+      paymentMethodId: {
         type: Sequelize.INTEGER
       },
-      delivery_address: {
+      deliveryAddress: {
         type: Sequelize.TEXT
       },
-      delivery_phone: {
+      deliveryPhone: {
         type: Sequelize.STRING
       },
-      total_cost: {
+      totalCost: {
         type: Sequelize.INTEGER
       },
       state: {
         type: Sequelize.STRING
       },
-      shipping_method: {
+      shippingMethod: {
         type: Sequelize.STRING
       },
       state: {

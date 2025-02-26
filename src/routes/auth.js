@@ -1,13 +1,15 @@
 import express from "express"
 import homeController from "../controller/homeController";
 import authController from "../controller/authController";
-
+import jwtActions from "../middleware/jwtActions"
 const router = express.Router();
 
 
 // Định nghĩa các Route sẽ sử dụng
 const initAuthRoutes = (app) => {
-    
+    // All Cookie Must PassAway this middleware: Authen and Authorize
+    router.all("*", jwtActions.checkUserCookie)
+
     router.post("/auth/create-user",authController.handleCreateUser)
     router.post("/auth/register",authController.handleCreateUser)
     router.post("/auth/login",authController.handleLogin)

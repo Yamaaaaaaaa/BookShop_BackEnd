@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.belongsTo(models.Group)
     }
   }
   User.init({
@@ -20,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     phone: DataTypes.STRING,
     address: DataTypes.STRING,
     status: DataTypes.STRING,
-    group_id: DataTypes.STRING
+    groupId: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'User',

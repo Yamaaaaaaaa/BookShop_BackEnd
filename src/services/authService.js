@@ -1,5 +1,7 @@
 import db from '../models/index';
 import jwtActions from "../middleware/jwtActions";
+import groupService from "../services/groupService";
+
 const { Op } = require("sequelize");
 
 const getAllUserService = async () => {
@@ -11,27 +13,54 @@ const getAllUserService = async () => {
     }
 }
 
-const getUserService = async () => {
+const getUserService = async (userData) => {
     try{
-        const data = await db.User.findOne()
-        return data
+        const data = await db.User.findOne({
+            where: {id: userData.id},
+            include: db.Group
+        })
+        if(data){
+            return {
+                status: 1,
+                message: "Get User Successful",
+                data: data
+            }
+        }
+        else{
+            return {
+                status: 0,
+                message: "Failed to Get User",
+            }
+        }
     }catch(error){
         console.log("Lỗi khi lấy thông tin người dùng",error);
+        return {
+            status: "-1",
+            message: "Failed to Get User, try again"
+        }
     }
 }
 
 const loginService = async (userData) => {
-    console.log("userData", userData);
     try{
         const data = await db.User.findOne({
             where : {email: userData.email, password: userData.password}
         })
+        
         if(data) {
+
+        // Gán kèm Role, Permisison ở trong jwt token luôn
+        
+        // Mã hóa roles/permissions vào JWT nhưng đặt thời gian hết hạn ngắn (ví dụ: 15 phút).
+        // hi JWT hết hạn, yêu cầu refresh token để cập nhật lại quyền từ database.
+            let groupWithRoles = await groupService.getGroupWithRoles(data)
             let payload = {
                 email: data.email,
                 name: data.name,
+                groupWithRoles: groupWithRoles,
                 expireIn: process.env.JWT_EXPIRED_IN //60ms
             }
+            
             const access_token = jwtActions.createJWT(payload)
             return {
                 status: 1,
@@ -48,7 +77,7 @@ const loginService = async (userData) => {
     }catch(error){
         console.log("Lỗi khi lấy thông tin người dùng",error);
         return {
-            status: "-1",
+            status: -1,
             message: "Failed to login, try again"
         }
     }

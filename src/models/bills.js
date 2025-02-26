@@ -14,13 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Bill.init({
-    user_id: DataTypes.INTEGER,
-    payment_method_id: DataTypes.INTEGER,
-    delivery_address: DataTypes.TEXT,
-    delivery_phone: DataTypes.STRING, //%
-    total_cost: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER,
+    paymentMethodId: DataTypes.INTEGER,
+    deliveryAddress: DataTypes.TEXT,
+    deliveryPhone: DataTypes.STRING, //%
+    totalCost: DataTypes.INTEGER,
     state: DataTypes.STRING, // Trạng thái đơn hàng: pending, approve, shipping, shipped, canceled
-    shipping_method: DataTypes.STRING,
+    shippingMethod: DataTypes.STRING,
     state:  DataTypes.STRING, //show/notshow
   }, {
     sequelize,

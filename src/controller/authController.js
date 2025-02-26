@@ -3,7 +3,7 @@ const handleCreateUser = async (req, res) => {
     try{
         const userData = {
             email: req.body.email,
-            password: req.body.email,
+            password: req.body.password,
             name: req.body.name,
             phone: req.body.phone,
             address: req.body.address,
@@ -38,12 +38,11 @@ const handleGetAllUser = async (req, res) => {
 
 const handleGetUser = async (req, res) => {
     try{
-        const data = await authService.getUserService()
-        return res.status("200").json({
-            status: 1,
-            message: "Oke Get User",
-            data: data
-        })
+        const userData = {
+            id: req.body.id
+        }
+        const data = await authService.getUserService(userData)
+        return res.status("200").json(data)
     }catch(error){
         return res.status("500").json({
             status: -1,
@@ -53,8 +52,16 @@ const handleGetUser = async (req, res) => {
 }
 
 const handleLogin = async (req, res) => {    
+    console.log("User: ",req.user);
+    
     try{
         const data = await authService.loginService(req.body)
+
+        // Kiểm tra xem nếu đăng nhập thành công thì trả Cookie
+        if(data && data.access_token){
+            res.cookie("jwt", data.access_token, {httpOnly: true, maxAge: 60*60*1000})
+        }
+
         return res.status("200").json(data)
     }catch(error){
         return res.status("500").json({
@@ -96,6 +103,7 @@ const handleChangePassword = async (req, res) => {
         })
     }
 }
+
 const handleDeleteUser = async (req, res) => {
     try{
         const data = await authService.deleteUserService(req.body)

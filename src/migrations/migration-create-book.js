@@ -15,7 +15,7 @@ module.exports = {
       description: {
         type: Sequelize.TEXT
       },
-      original_cost: {
+      originalCost: {
         type: Sequelize.INTEGER
       },
       sale: {
@@ -24,19 +24,19 @@ module.exports = {
       stock: {
         type: Sequelize.INTEGER
       },
-      publisher_id: {
+      publisherId: {
         type: Sequelize.STRING
       },
-      author_id: {
+      authorId: {
         type: Sequelize.STRING
       },
       state: {
         type: Sequelize.STRING
       },
-      published_date: {
+      publishedDate: {
         type: Sequelize.DATE
       },
-      series_id: {
+      seriesId: {
         type: Sequelize.STRING
       },
       createdAt: {
