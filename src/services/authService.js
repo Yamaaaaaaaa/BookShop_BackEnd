@@ -1,4 +1,5 @@
 import db from '../models/index';
+import jwtActions from "../middleware/jwtActions";
 const { Op } = require("sequelize");
 
 const getAllUserService = async () => {
@@ -26,9 +27,16 @@ const loginService = async (userData) => {
             where : {email: userData.email, password: userData.password}
         })
         if(data) {
+            let payload = {
+                email: data.email,
+                name: data.name,
+                expireIn: process.env.JWT_EXPIRED_IN //60ms
+            }
+            const access_token = jwtActions.createJWT(payload)
             return {
                 status: 1,
                 message: "Login Successful",
+                access_token: access_token,
                 data: data
             }
         }else{
@@ -59,8 +67,10 @@ const createUserService = async (userData) => {
         });
           
         if(created) {
+            const access_token = await jwtActions.createJWT(user)
             return {
                 status: 1,
+                access_token: access_token,
                 message: "Register Successful",
                 data: user
             }
