@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.TEXT,
     original_cost: DataTypes.INTEGER,
     sale: DataTypes.INTEGER, //%
-    stock: DataTypes.STOCK,
+    stock: DataTypes.INTEGER,
     publisher_id: DataTypes.INTEGER,
     author_id: DataTypes.INTEGER,
     state:  DataTypes.STRING, //show/notshow
