@@ -15,7 +15,7 @@ module.exports = {
       await queryInterface.bulkInsert('PaymentMethods',
         [ 
           { name: 'Ví Momo', description: 'Thanh toán qua Momo', qrUrl: 'https://momo.vn/qr' },
-          { name: 'Chuyển khoản ngân hàng', description: 'Thanh toán qua ngân hàng', qrUrl: '' },
+          { name: 'Chuyển khoản ngân hàng', description: 'Thanh toán qua ngân hàng', qrUrl: 'https://th.bing.com/th/id/R.c49b5d67e46b68c57e23ff47c033ea81?rik=mLdnD2WylTRcrA&pid=ImgRaw&r=0' },
           { name: 'Thanh toán khi nhận hàng', description: 'COD', qrUrl: '' }       
        ]
       , {});

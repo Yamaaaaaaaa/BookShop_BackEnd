@@ -15,7 +15,10 @@ module.exports = {
       await queryInterface.bulkInsert('WishLists',
         [ 
           { userId: 1, bookId: 2 },
-          { userId: 2, bookId: 3 }  
+          { userId: 2, bookId: 3 },
+          { userId: 3, bookId: 4 },
+          { userId: 4, bookId: 8 },
+          { userId: 5, bookId: 9 }  
         ]
       , {});
   },

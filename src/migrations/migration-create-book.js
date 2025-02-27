@@ -39,6 +39,9 @@ module.exports = {
       seriesId: {
         type: Sequelize.STRING
       },
+      bookImageUrl: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

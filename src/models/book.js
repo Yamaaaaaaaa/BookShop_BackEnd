@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     state:  DataTypes.STRING, //show/notshow
     publishedDate: DataTypes.DATE,
     seriesId: DataTypes.STRING,
+    bookImageUrl: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Book',
