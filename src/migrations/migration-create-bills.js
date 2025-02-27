@@ -30,9 +30,6 @@ module.exports = {
       shippingMethod: {
         type: Sequelize.STRING
       },
-      state: {
-        type: Sequelize.STRING
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
