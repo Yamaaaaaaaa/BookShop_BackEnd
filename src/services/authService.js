@@ -33,7 +33,7 @@ const getUserService = async (userData) => {
             }
         }
     }catch(error){
-        console.log("Lỗi khi lấy thông tin người dùng",error);
+        // console.log("Lỗi khi lấy thông tin người dùng",error);
         return {
             status: "-1",
             message: "Failed to Get User, try again"
@@ -96,7 +96,17 @@ const createUserService = async (userData) => {
         });
           
         if(created) {
-            const access_token = await jwtActions.createJWT(user)
+            console.log("User: ",user);
+            let groupWithRoles = await groupService.getGroupWithRoles(user)
+            let payload = {
+                email: user.email,
+                name: user.name,
+                groupWithRoles: groupWithRoles,
+                expireIn: process.env.JWT_EXPIRED_IN //60ms
+            }
+            
+            const access_token = jwtActions.createJWT(payload)
+
             return {
                 status: 1,
                 access_token: access_token,
@@ -110,9 +120,9 @@ const createUserService = async (userData) => {
             }
         }
     }catch(error){
-        console.log("Lỗi khi tạo người dùng",error);
+        // console.log("Lỗi khi tạo người dùng",error);
         return {
-            status: "-1",
+            status: -1,
             message: "Failed to register, try again"
         }
     }
@@ -139,9 +149,9 @@ const updateUserService = async (userData) => {
             }
         }
     }catch(error){
-        console.log("Lỗi khi sửa người dùng",error);
+        // console.log("Lỗi khi sửa người dùng",error);
         return {
-            status: "-1",
+            status: -1,
             message: "Failed to Update User"
         }
     }

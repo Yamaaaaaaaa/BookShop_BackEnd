@@ -17,7 +17,7 @@ const verifyJWT = (token) => {
     let data = null
     try{
         let decoded = jwt.verify(token, key)
-        console.log("Decoded JWT: ", decoded);
+        // console.log("Decoded JWT: ", decoded);
         data = decoded
     }catch(error){
         console.log(error);
@@ -84,9 +84,9 @@ const checkUserPermission = (req, res, next) =>{
         else{
             // Check các path được quyền: 
             let canAccess = roles.some(item => item.url === currentURL)
-            console.log("roles", roles);
-            console.log("currentURL", currentURL);
-            console.log("canAccess", canAccess);
+            // console.log("roles", roles);
+            // console.log("currentURL", currentURL);
+            // console.log("canAccess", canAccess);
             if(canAccess === true){
                 next()
             }

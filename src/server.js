@@ -2,6 +2,8 @@ import express from "express"
 import configViewEngine from "./config/viewEngines"
 import initWebRoutes from "./routes/web"
 import initAuthRoutes from "./routes/auth"
+import initBookRoutes from "./routes/book"
+
 import connection from "./config/connectDB"
 import bodyParser from "body-parser"
 import configCORS from "./config/cors"
@@ -39,5 +41,6 @@ app.use(cookieParser())
 // 5. init web route
 initWebRoutes(app)
 initAuthRoutes(app)
+initBookRoutes(app)
 
 

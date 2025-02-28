@@ -8,7 +8,7 @@ const handleCreateUser = async (req, res) => {
             phone: req.body.phone,
             address: req.body.address,
             status: req.body.status,
-            group_id: req.body.group_id,
+            groupId: req.body.groupId,
         }
         const data = await authService.createUserService(userData)
         return res.status("200").json(data)
