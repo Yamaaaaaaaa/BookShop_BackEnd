@@ -2,7 +2,11 @@ import express from "express"
 import configViewEngine from "./config/viewEngines"
 import initWebRoutes from "./routes/web"
 import initAuthRoutes from "./routes/auth"
-import initBookRoutes from "./routes/book"
+import initBookRoutes from "./routes/book" 
+import initCategoryRoutes from "./routes/categories" 
+import initPublisherRoutes from "./routes/publisher"
+import initSeriesRoutes from "./routes/series" 
+import initAuthorRoutes from "./routes/author" 
 
 import connection from "./config/connectDB"
 import bodyParser from "body-parser"
@@ -42,5 +46,7 @@ app.use(cookieParser())
 initWebRoutes(app)
 initAuthRoutes(app)
 initBookRoutes(app)
-
-
+initCategoryRoutes(app)
+initPublisherRoutes(app)
+initSeriesRoutes(app)
+initAuthorRoutes(app)

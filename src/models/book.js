@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       Book.belongsTo(models.Serie, { foreignKey: "seriesId" });
       Book.hasMany(models.Cart, { foreignKey: "bookId" });
       Book.hasMany(models.WishList, { foreignKey: "bookId" })
+      Book.belongsToMany(models.Category, {through: "Book_Category" , foreignKey: "bookId"} )
     }
   }
   Book.init({
@@ -31,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     publishedDate: DataTypes.DATE,
     seriesId: DataTypes.STRING,
     bookImageUrl: DataTypes.STRING,
+    pin: DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'Book',

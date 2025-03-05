@@ -1,12 +1,50 @@
 import db from '../models/index';
-
-const getAllBook = async() => {
+import { Op } from 'sequelize';
+const getAllBook = async(query) => {    
     try{
-        const bookData = await db.Book.findAll()        
+        // Set các Object điều kiện
+        const whereCondition = {}
+        const includeOptions = [
+            { model: db.Category },
+            { model: db.Publisher },
+            { model: db.Author },
+            { model: db.Serie },
+        ]; // Include mặc định
+
+        // Lấy ra các query: 
+        if(query){
+            if(query.pin !== undefined) whereCondition.pin = query.pin
+            if(query.authorId !== undefined) whereCondition.authorId = query.authorId
+            if(query.publisherId !== undefined) whereCondition.publisherId = query.publisherId
+            if(query.state !== undefined) whereCondition.state = query.state
+            if(query.seriesId !== undefined) whereCondition.seriesId = query.seriesId
+            if(query.keyword !== undefined) whereCondition.name = { [Op.regexp]: query.keyword }
+
+            // Xử lý danh sách categoryIds (chuyển về mảng số nguyên)
+            if (query.categoryIds) {
+                let categoryIds = JSON.parse(query.categoryIds);
+                console.log(categoryIds);
+
+                includeOptions[0].where = {
+                    id: { [Op.in]: categoryIds }
+                };
+            }
+        }
+        const limit = query.limit !== undefined ? parseInt(query.limit) : undefined;
+
+        // Lấy ra dữ liệu
+        const bookData = await db.Book.findAll(
+            {
+                where: whereCondition,
+                limit: limit,
+                include: includeOptions
+            }
+        )   
+        console.log("bookData", bookData);     
         if(bookData){
             return {
                 status: 1,
-                message: "Failed to Get All Book",
+                message: "Get Books Successful",
                 data: bookData
             }
         }
@@ -14,7 +52,7 @@ const getAllBook = async() => {
     }catch(error){
         return {
             status: -1,
-            message: "Failed to Get All Book",
+            message: "Failed to Get Books",
         }
     }
 }
@@ -48,18 +86,32 @@ const getBookService = async (bookData) => {
 }
 
 
-const createBookService = async (bookData) => {
-    console.log("bookData", bookData);
+const createBookService = async (bookData, categoriesIds) => {
 
     try{
-        const data = await db.Book.create(bookData);
+        const book  = await db.Book.create(bookData);
           
-        if(data) {
-            return {
-                status: 1,
-                message: "Create Book Successful",
-                data: data
-            }
+        if(book) {
+            // Thêm vào bảng Book_Category:
+            if(categoriesIds && categoriesIds.length > 0){
+                // Nhớ là phải convert chuỗi JSON Sang mảng trước khi truyền vô                
+                const book_cate = await book.addCategory(JSON.parse(categoriesIds)); // Lúc này mới là [1, 2])
+                if(book_cate){
+                    return {
+                        status: 1,
+                        message: "Create Book Successful",
+                        data: book,
+                        book_cate: book_cate
+                    }
+                }
+                else{
+                    return {
+                        status: 0,
+                        message: "Failed to Create Book: Add Category for Book",
+                        data: book
+                    }
+                }
+            }   
         }else{
             return {
                 status: 0,
@@ -75,24 +127,41 @@ const createBookService = async (bookData) => {
     }
 }
 
-const updateBookService = async (bookData) => {
+const updateBookService = async (bookData, categoriesId) => {
     try{
-        const data = await db.Book.update(
-            bookData,
-            {
-                where: { id: bookData.id },
-            }
-        );
-          
-        if(data) {
-            return {
-                status: 1,
-                message: "Updated Book Successful",
-            }
+        const bookFind = await db.Book.findOne({
+            where: { id: bookData.id },
+        });
+        
+ 
+        if(bookFind) {
+            const book = await db.Book.update(
+                bookData,
+                {
+                    where: { id: bookData.id },
+                }
+            );
+            if(categoriesId && categoriesId.length > 0){
+                // Nhớ là phải convert chuỗi JSON Sang mảng trước khi truyền vô                
+                const book_cate = await bookFind.setCategories(JSON.parse(categoriesId)); // Lúc này mới là [1, 2])
+                if(book_cate){
+                    return {
+                        status: 1,
+                        message: "Updated Book Successful",
+                        book_cate: book_cate
+                    }
+                }
+                else{
+                    return {
+                        status: 0,
+                        message: "Failed to Update book: Set New Category for Book",
+                    }
+                }
+            }   
         }else{
             return {
                 status: 0,
-                message: "Failed to Update book!",
+                message: "Failed to Update book!: Not Found or other Error",
             }
         }
     }catch(error){
@@ -105,7 +174,6 @@ const updateBookService = async (bookData) => {
 }
 
 const deleteBookService = async (bookData) => {
-    console.log("bookData delete: ", bookData);
     
     try{
         const data = await db.Book.findOne({

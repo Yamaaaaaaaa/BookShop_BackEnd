@@ -42,6 +42,9 @@ module.exports = {
       bookImageUrl: {
         type: Sequelize.STRING
       },
+      pin: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

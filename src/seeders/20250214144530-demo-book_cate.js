@@ -12,7 +12,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-      await queryInterface.bulkInsert('Book_Categorys',
+      await queryInterface.bulkInsert('Book_Categories',
         [ 
           { bookId: 1, categoryId: 2 },
           { bookId: 1, categoryId: 3 },

@@ -27,7 +27,7 @@ const verifyJWT = (token) => {
 
 
 // Các Path không cần check quyền
-const nonSecurePaths = ["/", "/auth/register", "/auth/login"]
+const nonSecurePaths = ["/", "/auth/register", "/auth/login", "/book/get-all-book", "/category/get-all-category", "/publisher/get-all-publisher"]
 
 // Middle Ware Authentication: Chỉ những người dùng nào đăng nhập mới đc đi tiếp (Hoặc là những Path ko cần bảo mật mới đc qua)
 const checkUserCookie = (req, res, next) => {

@@ -1,8 +1,12 @@
 import bookService from "../services/bookService"
 
 const handleGetAllBook = async (req, res) => {
+
+    // Nếu cần, sau này ta chỉ cần lọc những cái condition ta cần, tránh thừa thãi
+    const query = req.query
+    
     try{
-        const data = await bookService.getAllBook()
+        const data = await bookService.getAllBook(query)
         if(data){
             return res.status(200).json(data)
         }
@@ -15,7 +19,6 @@ const handleGetAllBook = async (req, res) => {
 }
 
 const handleCreateBook = async (req, res) => {
-    
     try{
         const bookData = {
             name: req.body.name,
@@ -28,9 +31,9 @@ const handleCreateBook = async (req, res) => {
             state: req.body.state,
             publishedDate: req.body.publishedDate,
             seriesId: req.body.seriesId,
-            bookImageUrl: req.body.bookImageUrl
+            bookImageUrl: req.body.bookImageUrl,
         }
-        const data = await bookService.createBookService(bookData)
+        const data = await bookService.createBookService(bookData, req.body.categoriesId)
         return res.status("200").json(data)
     }catch(error){
         return res.status("500").json({
@@ -57,7 +60,7 @@ const handleUpdateBook = async (req, res) => {
             seriesId: req.body.seriesId,
             bookImageUrl: req.body.bookImageUrl
         }
-        const data = await bookService.updateBookService(bookData)
+        const data = await bookService.updateBookService(bookData, req.body.categoriesId)
         return res.status("200").json(data)
     }catch(error){
         return res.status("500").json({
@@ -78,6 +81,7 @@ const handleDeleteBook = async (req, res) => {
         })
     }
 }
+
 module.exports = {
     handleGetAllBook,
     handleCreateBook,

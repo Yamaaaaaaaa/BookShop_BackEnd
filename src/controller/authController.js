@@ -52,7 +52,7 @@ const handleGetUser = async (req, res) => {
 }
 
 const handleLogin = async (req, res) => {    
-    console.log("User: ",req.user);
+    // console.log("User: ",req.user);
     
     try{
         const data = await authService.loginService(req.body)

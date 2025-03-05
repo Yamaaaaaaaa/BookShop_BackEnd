@@ -12,7 +12,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-      await queryInterface.bulkInsert('Categorys',
+      await queryInterface.bulkInsert('Categories',
         [ 
           { name: 'Tiểu thuyết', description: 'Các tác phẩm văn học hư cấu.' },
           { name: 'Thiếu nhi', description: 'Sách dành cho trẻ em.' },
