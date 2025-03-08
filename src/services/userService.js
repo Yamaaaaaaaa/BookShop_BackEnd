@@ -1,3 +1,4 @@
+import { query } from 'express';
 import db from '../models/index';
 
 const getCart = async (userID) => {
@@ -126,7 +127,65 @@ const updateCart = async (query) => {
         }
     }
 }
+
+const addToCart = async (query) => {
+    // query: bookID, userID => Đầu tiên, tìm bookID, userID, xem nó tk như vậy trong Cart ko 
+    // => Có: +1 (Nếu chưa out of Stock)
+    // => Ko có: Add thêm vô
+    // console.log("QUery add", query.bookId, query.userId);
+    
+    try{
+        const userCartData = await db.Cart.findOne({
+            where: {bookId: query.bookId, userId: query.userId},
+            include: [
+                {
+                    model: db.Book,
+                }
+            ]
+        })      
+        if(!userCartData)  {  // Ko tìm thấy
+            const addToCartData = await db.Cart.create(
+                {
+                    bookId: query.bookId, 
+                    userId: query.userId,
+                    quantity: 1
+                }
+            )    
+            if(addToCartData)  {
+                return {
+                    status: 1,
+                    message: "Add Book to Cart Successful (Create)",
+                    data: addToCartData
+                }
+            }
+        }
+        else{
+            // console.log(userCartData.Book);
+            
+            if(userCartData.quantity < userCartData.Book.stock) userCartData.quantity += 1;
+            const addToCartData = await userCartData.save()    
+            if(addToCartData)  {
+                return {
+                    status: 1,
+                    message: "Add Book to Cart Successful (Add)",
+                    data: addToCartData
+                }
+            }
+        }
+        
+        return {
+            status: 0,
+            message: "Failed to Add Book to Cart",
+        }
+    }catch(error){
+        return {
+            status: -1,
+            message: "Failed to Add Book to Cart",
+        }
+    }
+}
 module.exports = {
     getCart, 
-    updateCart
+    updateCart,
+    addToCart
 }

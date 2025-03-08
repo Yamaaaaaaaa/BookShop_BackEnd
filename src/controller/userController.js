@@ -31,8 +31,18 @@ const handleUpdateCart = async (req, res) => {
     }
 }
 
-const handleAddToCart = () => {
-    
+const handleAddToCart = async (req, res) => {
+    try{
+        const data = await userService.addToCart(req.query)
+        if(data){
+            return res.status(200).json(data)
+        }
+    }catch (error){
+        return res.status(500).json({
+            status: -1,
+            message: "Error from server" + error
+        })
+    }
 }
 
 module.exports = {

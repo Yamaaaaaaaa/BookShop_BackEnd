@@ -23,7 +23,7 @@ const getAllBook = async(query) => {
             // Xử lý danh sách categoryIds (chuyển về mảng số nguyên)
             if (query.categoryIds) {
                 let categoryIds = JSON.parse(query.categoryIds);
-                console.log(categoryIds);
+                // console.log(categoryIds);
 
                 includeOptions[0].where = {
                     id: { [Op.in]: categoryIds }
@@ -40,7 +40,7 @@ const getAllBook = async(query) => {
                 include: includeOptions
             }
         )   
-        console.log("bookData", bookData);     
+        // console.log("bookData", bookData);     
         if(bookData){
             return {
                 status: 1,
