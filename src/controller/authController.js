@@ -56,7 +56,7 @@ const handleLogin = async (req, res) => {
     
     try{
         const data = await authService.loginService(req.body)
-
+        
         // Kiểm tra xem nếu đăng nhập thành công thì trả Cookie
         if(data && data.access_token){
             res.cookie("jwt", data.access_token, {httpOnly: true, maxAge: 60*60*1000})

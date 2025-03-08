@@ -7,7 +7,7 @@ import initCategoryRoutes from "./routes/categories"
 import initPublisherRoutes from "./routes/publisher"
 import initSeriesRoutes from "./routes/series" 
 import initAuthorRoutes from "./routes/author" 
-
+import initUserRoutes from "./routes/user"
 import connection from "./config/connectDB"
 import bodyParser from "body-parser"
 import configCORS from "./config/cors"
@@ -50,3 +50,4 @@ initCategoryRoutes(app)
 initPublisherRoutes(app)
 initSeriesRoutes(app)
 initAuthorRoutes(app)
+initUserRoutes(app)
