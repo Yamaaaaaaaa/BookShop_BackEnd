@@ -7,7 +7,7 @@ const router = express.Router();
 // Định nghĩa các Route sẽ sử dụng
 const initBookRoutes = (app) => {
     // All Cookie Must PassAway this middleware: Authen and Authorize
-    router.all("*", jwtActions.checkUserCookie)
+    // router.all("*", jwtActions.checkUserCookie)
 
     router.get("/book/get-all-book",bookController.handleGetAllBook)
     router.post("/book/create-book",bookController.handleCreateBook)

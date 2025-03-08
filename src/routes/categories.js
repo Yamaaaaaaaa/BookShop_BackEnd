@@ -7,7 +7,7 @@ const router = express.Router();
 // Định nghĩa các Route sẽ sử dụng
 const initCategoryRoutes = (app) => {
     // All Cookie Must PassAway this middleware: Authen and Authorize
-    router.all("*", jwtActions.checkUserCookie)
+    // router.all("*", jwtActions.checkUserCookie)
 
     router.get("/category/get-all-category",categoryController.handleGetAllCategory)
     router.post("/category/create-category",categoryController.handleCreateCategory)

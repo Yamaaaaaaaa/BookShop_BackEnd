@@ -1,7 +1,7 @@
 import db from '../models/index';
 
 const getCart = async (userID) => {
-    console.log("userID", userID);
+    // console.log("userID", userID);
     
     try{
         const userCartData = await db.Cart.findAll({
@@ -32,7 +32,7 @@ const getCart = async (userID) => {
 }
 
 const updateCart = async (query) => {
-    console.log("query", query);
+    // console.log("query", query);
     // query: { Cart lưu: UID, BookID => Chỉ cần biết cartID là đc
     //     action: up, down, delete
     //     id: cartId
@@ -44,7 +44,7 @@ const updateCart = async (query) => {
             }) 
             if(deleteData){
                 const resDeleteData = await deleteData.destroy()
-                console.log("action: ", query.action, ": Data: ", deleteData);
+                // console.log("action: ", query.action, ": Data: ", deleteData);
                    
                 if(resDeleteData){
                     return {
@@ -67,9 +67,9 @@ const updateCart = async (query) => {
             
             if(cartData && cartData.Book.stock > cartData.quantity){
                 cartData.quantity += 1
-                console.log("action: up+", ": OldData: ", cartData.quantity);
+                // console.log("action: up+", ": OldData: ", cartData.quantity);
                 const updateData = await cartData.save() 
-                console.log("action: up+", ": NewData: ", updateData.quantity);
+                // console.log("action: up+", ": NewData: ", updateData.quantity);
                 if(updateData){
                     return {
                         status: 1,
@@ -88,11 +88,11 @@ const updateCart = async (query) => {
                     }
                 ]
             })        
-            console.log("action: down-", ": Data: ", cartData);  
+            // console.log("action: down-", ": Data: ", cartData);  
             if(cartData && cartData.quantity > 0){
                 cartData.quantity -= 1
-                if(cartData.quantity === 1){
-                    console.log("action: down-", ": OldData: ", cartData.quantity);
+                if(cartData.quantity === 0){
+                    // console.log("action: down-", ": OldData: ", cartData.quantity);
                     const updateData = await cartData.destroy() 
                     if(updateData){
                         return {
@@ -102,9 +102,9 @@ const updateCart = async (query) => {
                     } 
                 }
                 else{
-                    console.log("action: down-", ": OldData: ", cartData.quantity);
+                    // console.log("action: down-", ": OldData: ", cartData.quantity);
                     const updateData = await cartData.save() 
-                    console.log("action: down-", ": NewData: ", updateData.quantity);
+                    // console.log("action: down-", ": NewData: ", updateData.quantity);
                     if(updateData){
                         return {
                             status: 1,

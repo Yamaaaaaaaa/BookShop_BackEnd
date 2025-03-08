@@ -7,7 +7,7 @@ const router = express.Router();
 // Định nghĩa các Route sẽ sử dụng
 const initPublisherRoutes = (app) => {
     // All Cookie Must PassAway this middleware: Authen and Authorize
-    router.all("*", jwtActions.checkUserCookie)
+    // router.all("*", jwtActions.checkUserCookie)
 
     router.get("/publisher/get-all-publisher",publisherController.handleGetAllPublisher)
     router.post("/publisher/create-publisher",publisherController.handleCreatePublisher)

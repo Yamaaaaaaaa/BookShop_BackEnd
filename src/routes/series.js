@@ -7,7 +7,7 @@ const router = express.Router();
 // Định nghĩa các Route sẽ sử dụng
 const initSeriesRoutes = (app) => {
     // All Cookie Must PassAway this middleware: Authen and Authorize
-    router.all("*", jwtActions.checkUserCookie)
+    // router.all("*", jwtActions.checkUserCookie)
 
     router.get("/series/get-all-series",seriesController.handleGetAllSeries)
     router.post("/series/create-series",seriesController.handleCreateSeries)
