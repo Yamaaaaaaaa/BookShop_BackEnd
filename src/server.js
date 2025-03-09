@@ -8,6 +8,7 @@ import initPublisherRoutes from "./routes/publisher"
 import initSeriesRoutes from "./routes/series" 
 import initAuthorRoutes from "./routes/author" 
 import initUserRoutes from "./routes/user"
+import initBillRoutes from "./routes/bill"
 import connection from "./config/connectDB"
 import bodyParser from "body-parser"
 import configCORS from "./config/cors"
@@ -51,3 +52,4 @@ initPublisherRoutes(app)
 initSeriesRoutes(app)
 initAuthorRoutes(app)
 initUserRoutes(app)
+initBillRoutes(app)
