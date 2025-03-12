@@ -1,12 +1,16 @@
 import db from '../models/index';
-import { Op } from 'sequelize';
+import { Op, where } from 'sequelize';
 
-const getAllBill = async (query) => {
+const getOwnBill = async (query) => {
     //query: userId, 
     try{
         const includeOptions = [
-            {model: db.Book},
+            {
+                model: db.Book,
+                through: { attributes: ["quantity", "price"] } // Lấy thông tin từ bảng Bill Books
+            },
             {model: db.PaymentMethod}
+            
         ]
 
         const whereOptions = {}
@@ -16,6 +20,44 @@ const getAllBill = async (query) => {
         const billData = await db.Bill.findAll(
             {
                 where: whereOptions,
+                include: includeOptions
+            }
+        );
+        
+        if(billData){
+            return {
+                status: 1,
+                message: "Get User's Bill Successful",
+                data: billData
+            }
+        }
+        return {
+            status: 0,
+            message: "Failed to Get User's Bill",
+        }
+    }catch(error){
+        return {
+            status: -1,
+            message: "Error from Server (Service)",
+        }
+    }
+}
+
+
+const getAllBill = async () => {
+    //query: userId, 
+    try{
+        const includeOptions = [
+            {
+                model: db.Book,
+                through: { attributes: ["quantity", "price"] } // Lấy thông tin từ bảng Bill Books
+            },
+            {model: db.PaymentMethod},
+            {model: db.User}
+        ]
+
+        const billData = await db.Bill.findAll(
+            {
                 include: includeOptions
             }
         );
@@ -38,7 +80,6 @@ const getAllBill = async (query) => {
         }
     }
 }
-
 
 const getABill = async (query) => {
     //query: userId, 
@@ -139,8 +180,99 @@ const createBill = async (body) => {
         }
     }
 }
+
+// Dùng chung cho Admin luôn, vì check User là ở controller rồi
+const deleteOwnBill = async(billId) => {    
+    try{
+        const bill = await db.Bill.findOne({
+            where: {id: billId}
+        })
+        if(bill){
+            const checkDeleteBill = await bill.destroy()
+            if(checkDeleteBill){
+                const findBill_Book = await db.Bill_Book.findAll({
+                    where: {billId: billId}
+                })
+                // console.log("findBill_Book", findBill_Book);
+                
+                if(findBill_Book.length === 0){
+                    return {
+                        status: 1,
+                        message: "Delete Bill SuccessFul, Bill Hasn't Book",
+                    }
+                }
+
+                const checkDeleteBill_Book = await db.Bill_Book.destroy({
+                    where: {billId: billId}
+                })
+                if(checkDeleteBill_Book){
+                    return {
+                        status: 1,
+                        message: "Delete Bill SuccessFul",
+                        data: checkDeleteBill,
+                        dataBillBook: checkDeleteBill_Book,
+                    }
+                }
+            }
+        }
+
+        return {
+            status: 0,
+            message: "Error from Server (Service)",
+        }
+    }catch(error){
+        return {
+            status: -1,
+            message: "Error from Server (Service)",
+        }
+    }
+}
+
+const updateBill = async(body) => {
+    try{
+        const bill = await db.Bill.findOne({
+            include: {
+                model: db.Book,
+                through: { attributes: ["quantity", "price"] } // Lấy thông tin từ bảng Bill Books
+            },
+            where: {id: body.billId}
+        })
+        if(bill){
+            const checkOutOfStock = bill.Books.some((item) => (parseInt(item.stock) >= parseInt(item.Bill_Book.quantity)))
+            console.log("Check On Stock: ",checkOutOfStock)
+            if(checkOutOfStock){
+                const dataBillUpdated = await bill.update({state: body.state})
+                if(dataBillUpdated){
+                    return {
+                        status: 1,
+                        message: "Delete Bill SuccessFul",
+                        data: dataBillUpdated,
+                    }
+                }
+            } 
+            else{
+                return {
+                    status: 0,
+                    message: "One of Books is Out of Stock",
+                }
+            }
+        }
+        return {
+            status: 0,
+            message: "Error from Server (Service)",
+        }
+    }catch(error){
+        return {
+            status: -1,
+            message: "Error from Server (Service)",
+        }
+    }
+}
 module.exports = {
     getAllBill,
     getABill,
-    createBill
+    createBill,
+    deleteOwnBill,
+    getOwnBill, 
+    updateBill
 }

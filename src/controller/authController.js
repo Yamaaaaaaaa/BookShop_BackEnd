@@ -116,6 +116,28 @@ const handleDeleteUser = async (req, res) => {
     }
 }
 
+
+
+const handleAdminLogin = async (req, res) => {    
+    // console.log("User: ",req.user);
+    
+    try{
+        const data = await authService.loginAdminService(req.body)
+        
+        // Kiểm tra xem nếu đăng nhập thành công thì trả Cookie
+        if(data && data.access_token){
+            res.cookie("jwt", data.access_token, {httpOnly: true, maxAge: 60*60*1000})
+        }
+
+        return res.status("200").json(data)
+    }catch(error){
+        return res.status("500").json({
+            status: -1,
+            message: "Error From Server"
+        })
+    }
+}
+
 module.exports = {
     handleCreateUser,
     handleLogin,
@@ -123,5 +145,7 @@ module.exports = {
     handleGetUser,
     handleChangePassword,
     handleUpdateUser,
-    handleDeleteUser
+    handleDeleteUser,
+
+    handleAdminLogin
 }

@@ -66,7 +66,7 @@ const updateCart = async (query) => {
                 ]
             })      
             
-            if(cartData && cartData.Book.stock > cartData.quantity){
+            if(cartData && parseInt(cartData.Book.stock) > cartData.quantity){
                 cartData.quantity += 1
                 // console.log("action: up+", ": OldData: ", cartData.quantity);
                 const updateData = await cartData.save() 
@@ -132,8 +132,6 @@ const addToCart = async (query) => {
     // query: bookID, userID => Đầu tiên, tìm bookID, userID, xem nó tk như vậy trong Cart ko 
     // => Có: +1 (Nếu chưa out of Stock)
     // => Ko có: Add thêm vô
-    // console.log("QUery add", query.bookId, query.userId);
-    
     try{
         const userCartData = await db.Cart.findOne({
             where: {bookId: query.bookId, userId: query.userId},
@@ -148,7 +146,7 @@ const addToCart = async (query) => {
                 {
                     bookId: query.bookId, 
                     userId: query.userId,
-                    quantity: 1
+                    quantity: query.quantity
                 }
             )    
             if(addToCartData)  {
@@ -161,18 +159,30 @@ const addToCart = async (query) => {
         }
         else{
             // console.log(userCartData.Book);
-            
-            if(userCartData.quantity < userCartData.Book.stock) userCartData.quantity += 1;
-            const addToCartData = await userCartData.save()    
-            if(addToCartData)  {
+            console.log("quantity:", +userCartData.quantity);
+            console.log("quantity:", query.quantity)
+            console.log("sum:", parseInt(userCartData.quantity) + parseInt(query.quantity))
+            if(parseInt(userCartData.quantity) + parseInt(query.quantity) <= +userCartData.Book.stock){
+                // console.log("SUm:", +userCartData.quantity + query.quantity);
+                
+                userCartData.quantity += parseInt(query.quantity);
+                const addToCartData = await userCartData.save()    
+                if(addToCartData)  {
+                    return {
+                        status: 1,
+                        message: "Add Book to Cart Successful (Add)",
+                        data: addToCartData
+                    }
+                }
+            } 
+            else{
                 return {
-                    status: 1,
-                    message: "Add Book to Cart Successful (Add)",
-                    data: addToCartData
+                    status: 0,
+                    message: "Book is Out of Stock",
+                    data: userCartData
                 }
             }
         }
-        
         return {
             status: 0,
             message: "Failed to Add Book to Cart",
@@ -184,8 +194,57 @@ const addToCart = async (query) => {
         }
     }
 }
+
+const getPaymentMethod = async () => {
+    try{
+        const dataPayMethod = await db.PaymentMethod.findAll()
+        if(dataPayMethod){
+            return {
+                status: 1,
+                message: "Get Payment Method Successful",
+                data: dataPayMethod
+            }
+        }
+        return {
+            status: 0,
+            message: "Failed to Get Payment Method",
+        }
+    }catch(error){
+        return {
+            status: -1,
+            message: "Error from Server (Service)",
+        }
+    }
+}
+
+
+const getAllUserService = async () => {
+    try{
+        const dataUser = await db.User.findAll({
+            include: [{model: db.Group}]
+        })
+        if(dataUser){
+            return {
+                status: 1,
+                message: "Get All User Successful",
+                data: dataUser
+            }
+        }
+        return {
+            status: 0,
+            message: "Failed to Get All User Method",
+        }
+    }catch(error){
+        return {
+            status: -1,
+            message: "Error from Server (Service)",
+        }
+    }
+}
 module.exports = {
     getCart, 
     updateCart,
-    addToCart
+    addToCart,
+    getPaymentMethod,
+    getAllUserService
 }

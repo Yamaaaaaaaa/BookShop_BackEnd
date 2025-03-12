@@ -14,6 +14,8 @@ const initBookRoutes = (app) => {
     router.put("/book/update-book",bookController.handleUpdateBook)
     router.delete("/book/delete-book",bookController.handleDeleteBook)
 
+    router.get("/book/get-a-book",bookController.handleGetABook)
+
     return app.use("/api/v1", router) //Nạp các Router, mặc định bắt đầu là cái tham số đầu ấy (VD: /abc => /abc/about thì mới vào about) => Nên để mặc định "/"
 }
 

@@ -57,11 +57,16 @@ const getAllBook = async(query) => {
     }
 }
 
-
-const getBookService = async (bookData) => {
+const getABook = async (query) => {
+    const includeOptions = [
+        { model: db.Publisher },
+        { model: db.Author },
+        { model: db.Serie },
+    ]; // Include mặc định
     try{
         const data = await db.Book.findOne({
-            where: {id: bookData.id},
+            where: {id: query.id},
+            include: includeOptions
         })
         if(data){
             return {
@@ -77,17 +82,14 @@ const getBookService = async (bookData) => {
             }
         }
     }catch(error){
-        // console.log("Lỗi khi lấy thông tin người dùng",error);
         return {
             status: "-1",
-            message: "Failed to Get book, try again"
+            message: "Error from server (Service)"
         }
     }
 }
 
-
 const createBookService = async (bookData, categoriesIds) => {
-
     try{
         const book  = await db.Book.create(bookData);
           
@@ -112,6 +114,11 @@ const createBookService = async (bookData, categoriesIds) => {
                     }
                 }
             }   
+            return {
+                status: 1,
+                message: "Create Book Successful (No Cate)",
+                data: book,
+            }
         }else{
             return {
                 status: 0,
@@ -158,6 +165,11 @@ const updateBookService = async (bookData, categoriesId) => {
                     }
                 }
             }   
+            return {
+                status: 1,
+                message: "Updated Book Successful (Ko Update Cate)",
+                book_cate: book
+            }
         }else{
             return {
                 status: 0,
@@ -174,6 +186,7 @@ const updateBookService = async (bookData, categoriesId) => {
 }
 
 const deleteBookService = async (bookData) => {
+    console.log(bookData);
     
     try{
         const data = await db.Book.findOne({
@@ -201,9 +214,10 @@ const deleteBookService = async (bookData) => {
     }
 }
 
+
 module.exports = {
     getAllBook,
-    getBookService,
+    getABook,
     createBookService,
     updateBookService,
     deleteBookService

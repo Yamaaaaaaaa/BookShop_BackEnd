@@ -45,9 +45,38 @@ const handleAddToCart = async (req, res) => {
     }
 }
 
+const handleGetPaymentMethod = async (req, res) => {
+    try{
+        const data = await userService.getPaymentMethod()
+        if(data){
+            return res.status(200).json(data)
+        }
+    }catch (error){
+        return res.status(500).json({
+            status: -1,
+            message: "Error from server" + error
+        })
+    }
+}
+
+const handleGetAllUser = async (req, res) => {
+    try{
+        const data = await userService.getAllUserService()
+        if(data){
+            return res.status(200).json(data)
+        }
+    }catch (error){
+        return res.status(500).json({
+            status: -1,
+            message: "Error from server" + error
+        })
+    }
+}
 module.exports = {
     handleGetProfile,
     handleGetCart,
     handleUpdateCart,
-    handleAddToCart
+    handleAddToCart,
+    handleGetPaymentMethod,
+    handleGetAllUser
 }

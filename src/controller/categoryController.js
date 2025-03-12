@@ -55,7 +55,7 @@ const handleUpdateCategory = async (req, res) => {
 
 const handleDeleteCategory = async (req, res) => {
     try{
-        const data = await categoryService.deleteCategoryService(req.body)
+        const data = await categoryService.deleteCategoryService(req.query)
         return res.status("200").json(data)
     }catch(error){
         return res.status("500").json({

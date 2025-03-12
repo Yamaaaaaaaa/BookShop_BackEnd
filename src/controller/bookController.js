@@ -1,10 +1,23 @@
 import bookService from "../services/bookService"
 
-const handleGetAllBook = async (req, res) => {
+const handleGetABook = async (req, res) => {
+    const query = req.query
+    try{
+        const data = await bookService.getABook(query)
+        if(data){
+            return res.status(200).json(data)
+        }
+    }catch (error){
+        return res.status(500).json({
+            status: -1,
+            message: "Error from server" + error
+        })
+    }
+}
 
+const handleGetAllBook = async (req, res) => {
     // Nếu cần, sau này ta chỉ cần lọc những cái condition ta cần, tránh thừa thãi
     const query = req.query
-    
     try{
         const data = await bookService.getAllBook(query)
         if(data){
@@ -43,7 +56,6 @@ const handleCreateBook = async (req, res) => {
     }
 }
 
-
 const handleUpdateBook = async (req, res) => {
     try{
         const bookData = {
@@ -72,7 +84,7 @@ const handleUpdateBook = async (req, res) => {
 
 const handleDeleteBook = async (req, res) => {
     try{
-        const data = await bookService.deleteBookService(req.body)
+        const data = await bookService.deleteBookService(req.query)
         return res.status("200").json(data)
     }catch(error){
         return res.status("500").json({
@@ -84,6 +96,7 @@ const handleDeleteBook = async (req, res) => {
 
 module.exports = {
     handleGetAllBook,
+    handleGetABook,
     handleCreateBook,
     handleUpdateBook,
     handleDeleteBook,
