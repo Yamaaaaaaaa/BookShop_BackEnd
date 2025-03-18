@@ -123,6 +123,7 @@ const deleteCategoryService = async (cateData) => {
             where: {id: cateData.id}
         })
         if(data){
+            // Chưa xóa các link với Book này
             const dataDeleted = await db.Category.destroy({
                 where: {id: cateData.id}
             })

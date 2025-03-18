@@ -132,24 +132,42 @@ const createUserService = async (userData) => {
 }
 
 const updateUserService = async (userData) => {
+    console.log("userData", userData);
+    
     try{
-        const data = await db.User.update(
-            userData,
-            {
-                where: { email: userData.email },
+        const checkUser = await db.User.findOne({
+            where: {id: userData.id}
+        })
+        if(checkUser){
+            if(userData.name){
+                checkUser.name = userData.name
             }
-        );
-          
-        if(data) {
-            return {
-                status: 1,
-                message: "Updated Successful",
+            if(userData.phone){
+                checkUser.phone = userData.phone
             }
-        }else{
+            if(userData.address){
+                checkUser.address = userData.address
+            }
+            if(userData.groupId){
+                checkUser.groupId = userData.groupId
+            }
+            const data = await checkUser.save();
+              
+            if(data) {
+                return {
+                    status: 1,
+                    message: "Updated Successful",
+                    data: data
+                }
+            }
             return {
                 status: 0,
                 message: "Failed to Update User!",
             }
+        }
+        return {
+            status: 0,
+            message: "Failed to Update User! (User not Found)",
         }
     }catch(error){
         // console.log("Lỗi khi sửa người dùng",error);
@@ -186,8 +204,6 @@ const deleteUserService = async (userData) => {
         }
     }
 }
-
-
 
 const loginAdminService = async (userData) => {
     try{
@@ -254,6 +270,5 @@ module.exports = {
     getUserService,
     updateUserService,
     deleteUserService,
-
     loginAdminService
 }

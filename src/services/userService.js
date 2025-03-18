@@ -241,10 +241,13 @@ const getAllUserService = async () => {
         }
     }
 }
+
+
 module.exports = {
     getCart, 
     updateCart,
     addToCart,
     getPaymentMethod,
-    getAllUserService
+    getAllUserService,
+    
 }

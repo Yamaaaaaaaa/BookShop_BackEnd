@@ -26,12 +26,12 @@ const verifyJWT = (token) => {
 }
 
 
-const nonSecurePaths = ["/", "/auth/client/register", "/auth/client/login", "/auth/admin/login","/book/get-all-book", "/category/get-all-category", "/publisher/get-all-publisher"]
+const nonSecurePaths = ["/", "/auth/client/register", "/auth/client/login", "/auth/admin/login","/auth/admin/add-user","/book/get-all-book", "/category/get-all-category", "/publisher/get-all-publisher"]
 
 const checkUserCookie = (req, res, next) => {
     try {
         if (nonSecurePaths.includes(req.path)) {
-            return next(); // ✅ Đảm bảo return để không chạy tiếp
+            return next(); 
         }
 
         const cookies = req.cookies;

@@ -23,6 +23,13 @@ const initAuthRoutes = (app) => {
     
     // For Admin:
     router.post("/auth/admin/login",authController.handleAdminLogin)
+    router.post("/auth/admin/add-user", authController.handleCreateUser)
+    router.put("/auth/admin/change-password",authController.handleChangePassword)
+    
+    //group:
+    router.get("/group/get-all-group", authController.handleGetAllGroup)
+
+    // Xóa User: Xóa Bill, BillBook, Cart, Wishlist
 
 
     return app.use("/api/v1", router) //Nạp các Router, mặc định bắt đầu là cái tham số đầu ấy (VD: /abc => /abc/about thì mới vào about) => Nên để mặc định "/"

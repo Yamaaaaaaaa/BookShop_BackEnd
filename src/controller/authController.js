@@ -1,4 +1,6 @@
 import authService from "../services/authService"
+import groupService from "../services/groupService"
+
 const handleCreateUser = async (req, res) => {
     try{
         const userData = {
@@ -73,12 +75,13 @@ const handleLogin = async (req, res) => {
 
 const handleUpdateUser = async (req, res) => {
     try{
-        const userData = {
-            email: req.body.email,
-            name: req.body.name,
-            address: req.body.address,
-        }
-        const data = await authService.updateUserService(userData)
+        // const userData = {
+        //     email: req.body.email,
+        //     name: req.body.name,
+        //     address: req.body.address,
+        // }
+        // if(req.groupId) userData.groupId = req.groupId
+        const data = await authService.updateUserService(req.body)
         return res.status("200").json(data)
     }catch(error){
         return res.status("500").json({
@@ -138,6 +141,17 @@ const handleAdminLogin = async (req, res) => {
     }
 }
 
+const handleGetAllGroup = async(req, res) => {
+    try{
+        const data = await groupService.getAllGroup()
+        return res.status("200").json(data)
+    }catch(error){
+        return res.status("500").json({
+            status: -1,
+            message: "Error From Server"
+        })
+    }
+}
 module.exports = {
     handleCreateUser,
     handleLogin,
@@ -146,6 +160,6 @@ module.exports = {
     handleChangePassword,
     handleUpdateUser,
     handleDeleteUser,
-
-    handleAdminLogin
+    handleAdminLogin,
+    handleGetAllGroup
 }

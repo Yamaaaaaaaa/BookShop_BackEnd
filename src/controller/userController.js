@@ -72,11 +72,13 @@ const handleGetAllUser = async (req, res) => {
         })
     }
 }
+
+
 module.exports = {
     handleGetProfile,
     handleGetCart,
     handleUpdateCart,
     handleAddToCart,
     handleGetPaymentMethod,
-    handleGetAllUser
+    handleGetAllUser,
 }

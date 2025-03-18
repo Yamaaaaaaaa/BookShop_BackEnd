@@ -13,6 +13,27 @@ const getGroupWithRoles = async (userData) => {
     return role ? role: {}
 }
 
+const getAllGroup = async (userData) => {
+    try{
+        const group = await db.Group.findAll()
+        if(group){
+            return {
+                status: 1,
+                message: "Get Author Successful",
+                data: group
+            }
+        }
+        
+    }catch(error){
+        return {
+            status: -1,
+            message: "Failed to Get Author",
+        }
+    }
+    
+}
+
 module.exports = {
-    getGroupWithRoles
+    getGroupWithRoles,
+    getAllGroup
 }

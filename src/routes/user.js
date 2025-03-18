@@ -12,6 +12,7 @@ const initUserRoutes = (app) => {
     // Profile
     router.get("/user/get-user-profile", userController.handleGetProfile)
     
+
     //Cart: 
     router.get("/user/get-cart", userController.handleGetCart)
     router.put("/user/update-cart", userController.handleUpdateCart)
