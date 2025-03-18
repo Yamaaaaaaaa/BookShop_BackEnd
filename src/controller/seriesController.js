@@ -55,7 +55,7 @@ const handleUpdateSeries = async (req, res) => {
 
 const handleDeleteSeries = async (req, res) => {
     try{
-        const data = await seriesService.deleteSeriesService(req.body)
+        const data = await seriesService.deleteSeriesService(req.query)
         return res.status("200").json(data)
     }catch(error){
         return res.status("500").json({

@@ -117,33 +117,43 @@ const updateCategoryService = async (cateData) => {
 }
 
 const deleteCategoryService = async (cateData) => {
+    const transaction = await db.sequelize.transaction();
     
-    try{
+    try {
         const data = await db.Category.findOne({
-            where: {id: cateData.id}
-        })
-        if(data){
-            // Chưa xóa các link với Book này
-            const dataDeleted = await db.Category.destroy({
-                where: {id: cateData.id}
-            })
-            return {
-                status: 1,
-                message: "Deleted Successful"
-            }
-        }else{
+            where: { id: cateData.id },
+            transaction
+        });
+
+        if (!data) {
+            await transaction.rollback();
             return {
                 status: 0,
                 message: "Failed to Delete Category"
-            }
+            };
         }
-    }catch(error){
+
+        // Thêm logic để xóa các quan hệ liên quan nếu cần
+        await db.Category.destroy({
+            where: { id: cateData.id },
+            transaction
+        });
+
+        await transaction.commit();
+        return {
+            status: 1,
+            message: "Deleted Successfully"
+        };
+
+    } catch (error) {
+        await transaction.rollback();
         return {
             status: -1,
-            message: "Failed to Delete Category"
-        }
+            message: "Failed to Delete Category",
+            error: error.message
+        };
     }
-}
+};
 
 module.exports = {
     getAllCategory,

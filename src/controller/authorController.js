@@ -56,7 +56,7 @@ const handleUpdateAuthor = async (req, res) => {
 
 const handleDeleteAuthor = async (req, res) => {
     try{
-        const data = await authorService.deleteAuthorService(req.body)
+        const data = await authorService.deleteAuthorService(req.query)
         return res.status("200").json(data)
     }catch(error){
         return res.status("500").json({
