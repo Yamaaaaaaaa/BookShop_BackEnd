@@ -182,52 +182,62 @@ const createBill = async (body) => {
     }
 }
 
-// Dùng chung cho Admin luôn, vì check User là ở controller rồi
-const deleteOwnBill = async(billId) => {    
-    try{
-        const bill = await db.Bill.findOne({
-            where: {id: billId}
-        })
-        if(bill){
-            const checkDeleteBill = await bill.destroy()
-            if(checkDeleteBill){
-                const findBill_Book = await db.Bill_Book.findAll({
-                    where: {billId: billId}
-                })
-                // console.log("findBill_Book", findBill_Book);
-                
-                if(findBill_Book.length === 0){
-                    return {
-                        status: 1,
-                        message: "Delete Bill SuccessFul, Bill Hasn't Book",
-                    }
-                }
+const deleteOwnBill = async (billId) => {
+    const transaction = await db.sequelize.transaction(); // Bắt đầu transaction
 
-                const checkDeleteBill_Book = await db.Bill_Book.destroy({
-                    where: {billId: billId}
-                })
-                if(checkDeleteBill_Book){
-                    return {
-                        status: 1,
-                        message: "Delete Bill SuccessFul",
-                        data: checkDeleteBill,
-                        dataBillBook: checkDeleteBill_Book,
-                    }
-                }
+    try {
+        // Lấy hóa đơn cần xóa
+        const bill = await db.Bill.findOne({
+            where: { id: billId },
+            include: {
+                model: db.Book,
+                through: { attributes: ["quantity"] }, // Lấy số lượng sách
+            },
+            transaction,
+        });
+
+        if (!bill) {
+            await transaction.rollback();
+            return {
+                status: 0,
+                message: "Bill not found",
+            };
+        }
+
+        // Nếu hóa đơn đã được "approved", hoàn lại stock sách
+        if (bill.state === "approved") {
+            for (const book of bill.Books) {
+                book.stock += parseInt(book.Bill_Book.quantity); // Hoàn lại số lượng sách
+                await book.save({ transaction });
             }
         }
 
+        // Xóa liên kết trong bảng trung gian Bill_Book
+        await db.Bill_Book.destroy({
+            where: { billId: billId },
+            transaction,
+        });
+
+        // Xóa bill
+        const checkDeleteBill = await bill.destroy({ transaction });
+
+        await transaction.commit(); // Xác nhận transaction
+
         return {
-            status: 0,
-            message: "Error from Server (Service)",
-        }
-    }catch(error){
+            status: 1,
+            message: "Delete Bill Successful",
+            data: checkDeleteBill,
+        };
+    } catch (error) {
+        await transaction.rollback(); // Rollback nếu có lỗi
         return {
             status: -1,
             message: "Error from Server (Service)",
-        }
+            error: error.message,
+        };
     }
-}
+};
+
 
 const updateBill = async (body) => {
     const transaction = await db.sequelize.transaction(); // Bắt đầu transaction
