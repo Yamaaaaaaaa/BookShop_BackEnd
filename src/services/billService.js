@@ -82,10 +82,11 @@ const getAllBill = async () => {
 }
 
 const getABill = async (query) => {
-    //query: userId, 
+    //query: billId, 
     try{
         const includeOptions = [
             {model: db.Book},
+            {model: db.User},
             {model: db.PaymentMethod}
         ]
 
@@ -228,46 +229,71 @@ const deleteOwnBill = async(billId) => {
     }
 }
 
-const updateBill = async(body) => {
-    try{
+const updateBill = async (body) => {
+    const transaction = await db.sequelize.transaction(); // Bắt đầu transaction
+
+    try {
         const bill = await db.Bill.findOne({
             include: {
                 model: db.Book,
-                through: { attributes: ["quantity", "price"] } // Lấy thông tin từ bảng Bill Books
+                through: { attributes: ["quantity", "price"] }, // Lấy số lượng từ bảng trung gian
             },
-            where: {id: body.billId}
-        })
-        if(bill){
-            const checkOutOfStock = bill.Books.some((item) => (parseInt(item.stock) >= parseInt(item.Bill_Book.quantity)))
-            console.log("Check On Stock: ",checkOutOfStock)
-            if(checkOutOfStock){
-                const dataBillUpdated = await bill.update({state: body.state})
-                if(dataBillUpdated){
+            where: { id: body.billId },
+            transaction,
+        });
+
+        if (!bill) {
+            await transaction.rollback();
+            return {
+                status: 0,
+                message: "Bill not found",
+            };
+        }
+
+        // Kiểm tra stock trước khi cập nhật
+        if (body.state === "approved") {
+            for (const item of bill.Books) {
+                if (parseInt(item.stock) < parseInt(item.Bill_Book.quantity)) {
+                    await transaction.rollback();
                     return {
-                        status: 1,
-                        message: "Delete Bill SuccessFul",
-                        data: dataBillUpdated,
-                    }
-                }
-            } 
-            else{
-                return {
-                    status: 0,
-                    message: "One of Books is Out of Stock",
+                        status: 0,
+                        message: `Book: ${item.title} is out of stock`,
+                    };
                 }
             }
+
+            // Giảm số lượng sách trong kho
+            for (const item of bill.Books) {
+                item.stock -= parseInt(item.Bill_Book.quantity);
+                await item.save({ transaction });
+            }
+        } else if (body.state === "cancelled") {
+            // Hoàn lại số lượng sách khi hủy đơn
+            for (const item of bill.Books) {
+                item.stock += parseInt(item.Bill_Book.quantity);
+                await item.save({ transaction });
+            }
         }
+
+        // Cập nhật trạng thái của hóa đơn
+        const dataBillUpdated = await bill.update({ state: body.state }, { transaction });
+
+        await transaction.commit(); // Xác nhận transaction
+
         return {
-            status: 0,
-            message: "Error from Server (Service)",
-        }
-    }catch(error){
+            status: 1,
+            message: "Update Bill Successful",
+            data: dataBillUpdated,
+        };
+    } catch (error) {
+        await transaction.rollback(); // Hủy bỏ transaction nếu có lỗi
         return {
             status: -1,
             message: "Error from Server (Service)",
-        }
+            error: error.message,
+        };
     }
-}
+};
 module.exports = {
     getAllBill,
     getABill,
