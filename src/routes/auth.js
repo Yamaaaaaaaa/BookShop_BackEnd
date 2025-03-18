@@ -18,9 +18,7 @@ const initAuthRoutes = (app) => {
     router.get("/auth/get-all-user",authController.handleGetAllUser)
     router.put("/auth/update-user",authController.handleUpdateUser)
     router.put("/auth/change-password",authController.handleChangePassword)
-    router.delete("/auth/delete-user",authController.handleDeleteUser)
 
-    
     // For Admin:
     router.post("/auth/admin/login",authController.handleAdminLogin)
     router.post("/auth/admin/add-user", authController.handleCreateUser)

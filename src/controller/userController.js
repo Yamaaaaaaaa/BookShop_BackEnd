@@ -62,9 +62,22 @@ const handleGetPaymentMethod = async (req, res) => {
 const handleGetAllUser = async (req, res) => {
     try{
         const data = await userService.getAllUserService()
-        if(data){
+        // if(data){
             return res.status(200).json(data)
-        }
+        // }
+    }catch (error){
+        return res.status(500).json({
+            status: -1,
+            message: "Error from server" + error
+        })
+    }
+}
+const handleDeleteUser = async (req, res) => {
+    try{
+        const data = await userService.deleteUser(req.query)
+        // if(data){
+            return res.status(200).json(data)
+        // }
     }catch (error){
         return res.status(500).json({
             status: -1,
@@ -73,7 +86,6 @@ const handleGetAllUser = async (req, res) => {
     }
 }
 
-
 module.exports = {
     handleGetProfile,
     handleGetCart,
@@ -81,4 +93,5 @@ module.exports = {
     handleAddToCart,
     handleGetPaymentMethod,
     handleGetAllUser,
+    handleDeleteUser
 }

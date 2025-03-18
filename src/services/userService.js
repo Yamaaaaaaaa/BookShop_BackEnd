@@ -1,6 +1,7 @@
 import { query } from 'express';
 import db from '../models/index';
-
+import { where } from 'sequelize';
+import billService from "./billService"
 const getCart = async (userID) => {
     // console.log("userID", userID);
     
@@ -242,6 +243,62 @@ const getAllUserService = async () => {
     }
 }
 
+const deleteUser = async (query) => {
+    const t = await db.sequelize.transaction(); // Mở transaction
+    try {
+        const userId = query.id;
+
+        // Xóa User trong transaction
+        const checkDelete = await db.User.destroy({ where: { id: userId }, transaction: t });
+
+        if (!checkDelete) {
+            await t.rollback();
+            return {
+                status: 0,
+                message: "Failed to delete User (User Not Found)",
+            };
+        }
+
+        // Xóa hóa đơn của User
+        let checkBill = true;
+        try {
+            const allBillOfUser = await db.Bill.findAll({ where: { userId }, transaction: t });
+            for (const bill of allBillOfUser) {
+                const check = await billService.deleteOwnBill(bill.id);
+                if (!check) checkBill = false;
+            }
+        } catch (err) {
+            checkBill = false;
+            console.error("Error deleting bills:", err);
+        }
+
+        // Xóa Cart và Wishlist của User trong transaction
+        const checkCart = await db.Cart.destroy({ where: { userId }, transaction: t });
+        const checkWishList = await db.WishList.destroy({ where: { userId }, transaction: t });
+
+        // Nếu mọi thứ đều OK -> Commit
+        await t.commit();
+
+        return {
+            status: 1,
+            message: "Delete User Successful",
+            data: { userId },
+            cartCheck: checkCart,
+            billCheck: checkBill,
+            wishlistCheck: checkWishList
+        };
+
+    } catch (error) {
+        await t.rollback(); // Hoàn tác nếu có lỗi
+        console.error("Error deleting user:", error);
+        return {
+            status: -1,
+            message: "Error from Server (Service)",
+            error: error.message
+        };
+    }
+};
+
 
 module.exports = {
     getCart, 
@@ -249,5 +306,5 @@ module.exports = {
     addToCart,
     getPaymentMethod,
     getAllUserService,
-    
+    deleteUser
 }

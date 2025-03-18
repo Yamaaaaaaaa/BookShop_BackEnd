@@ -19,7 +19,7 @@ const getAllGroup = async (userData) => {
         if(group){
             return {
                 status: 1,
-                message: "Get Author Successful",
+                message: "Get Groups Successful",
                 data: group
             }
         }
@@ -27,7 +27,7 @@ const getAllGroup = async (userData) => {
     }catch(error){
         return {
             status: -1,
-            message: "Failed to Get Author",
+            message: "Failed to Get Groups",
         }
     }
     

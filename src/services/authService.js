@@ -178,32 +178,6 @@ const updateUserService = async (userData) => {
     }
 }
 
-const deleteUserService = async (userData) => {
-    try{
-        const data = await db.User.findOne({
-            where: {email: userData.email}
-        })
-        if(data){
-            const dataDeleted = await db.User.destroy({
-                where: {email: userData.email}
-            })
-            return {
-                status: 1,
-                message: "Deleted Successful"
-            }
-        }else{
-            return {
-                status: 0,
-                message: "Khong tim thay ng dung"
-            }
-        }
-    }catch(error){
-        return {
-            status: -1,
-            message: "Failed to Delete User"
-        }
-    }
-}
 
 const loginAdminService = async (userData) => {
     try{
@@ -269,6 +243,5 @@ module.exports = {
     getAllUserService,
     getUserService,
     updateUserService,
-    deleteUserService,
     loginAdminService
 }

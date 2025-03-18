@@ -107,19 +107,6 @@ const handleChangePassword = async (req, res) => {
     }
 }
 
-const handleDeleteUser = async (req, res) => {
-    try{
-        const data = await authService.deleteUserService(req.body)
-        return res.status("200").json(data)
-    }catch(error){
-        return res.status("500").json({
-            status: -1,
-            message: "Error From Server"
-        })
-    }
-}
-
-
 
 const handleAdminLogin = async (req, res) => {    
     // console.log("User: ",req.user);
@@ -159,7 +146,6 @@ module.exports = {
     handleGetUser,
     handleChangePassword,
     handleUpdateUser,
-    handleDeleteUser,
     handleAdminLogin,
     handleGetAllGroup
 }
