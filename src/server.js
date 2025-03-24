@@ -5,6 +5,7 @@ import initAuthRoutes from "./routes/auth"
 import initBookRoutes from "./routes/book" 
 import initCategoryRoutes from "./routes/categories" 
 import initPublisherRoutes from "./routes/publisher"
+import initWishListRoutes from "./routes/wishlist"
 import initPaymentMethodRoutes from "./routes/paymentMethod"
 
 import initSeriesRoutes from "./routes/series" 
@@ -56,3 +57,4 @@ initAuthorRoutes(app)
 initUserRoutes(app)
 initBillRoutes(app)
 initPaymentMethodRoutes(app)
+initWishListRoutes(app)
