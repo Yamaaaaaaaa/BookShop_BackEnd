@@ -14,10 +14,10 @@ module.exports = {
     */
       await queryInterface.bulkInsert('Authors',
         [ 
-          { name: 'Nguyễn Nhật Ánh', description: 'Nhà văn nổi tiếng với các tác phẩm dành cho tuổi thơ.' },
-          { name: 'J.K. Rowling', description: 'Tác giả của loạt truyện Harry Potter.' },
-          { name: 'Haruki Murakami', description: 'Nhà văn Nhật Bản nổi tiếng với phong cách kỳ ảo.' },
-          { name: 'Gosho Aoyama', description: 'Tác giả của bộ truyện trinh thám Thám tử lừng danh Conan.' }
+          { name: 'Nguyễn Nhật Ánh', description: 'Nhà văn nổi tiếng với các tác phẩm dành cho tuổi thơ.', authorImage: "" },
+          { name: 'J.K. Rowling', description: 'Tác giả của loạt truyện Harry Potter.', authorImage: "" },
+          { name: 'Haruki Murakami', description: 'Nhà văn Nhật Bản nổi tiếng với phong cách kỳ ảo.', authorImage: "" },
+          { name: 'Gosho Aoyama', description: 'Tác giả của bộ truyện trinh thám Thám tử lừng danh Conan.', authorImage: ""}
         ]
       , {});
   },

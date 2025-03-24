@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   Author.init({
     name: DataTypes.STRING,
     description: DataTypes.TEXT,
+    authorImage: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Author',

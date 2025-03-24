@@ -4,7 +4,6 @@ const getAllAuthor = async(query) => {
     try{
         const whereCondition = {}
         if(query){
-            
         }
         const limit = query.limit !== undefined ? parseInt(query.limit) : undefined;
         
