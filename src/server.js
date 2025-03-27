@@ -24,11 +24,10 @@ const app = express()
 // 0. Test: 
 connection()
 
-
-const PORT = process.env.PORT || 8080
-app.listen(PORT, () =>{
-    console.log(">>>JWT WEB is running in PORT: " + PORT)
-})
+// const PORT = process.env.PORT || 8080
+// app.listen(PORT, () =>{
+//     console.log(">>>JWT WEB is running in PORT: " + PORT)
+// })
 
 // 1. config viewEngine
 configViewEngine(app)
@@ -58,3 +57,8 @@ initUserRoutes(app)
 initBillRoutes(app)
 initPaymentMethodRoutes(app)
 initWishListRoutes(app)
+
+
+
+
+export default app;

@@ -1,5 +1,4 @@
 import express from "express"
-import homeController from "../controller/homeController";
 import authController from "../controller/authController";
 import jwtActions from "../middleware/jwtActions"
 const router = express.Router();
