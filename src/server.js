@@ -1,4 +1,4 @@
-import express from "express"
+const express = require("express");
 import configViewEngine from "./config/viewEngines"
 import initWebRoutes from "./routes/web"
 import initAuthRoutes from "./routes/auth"
